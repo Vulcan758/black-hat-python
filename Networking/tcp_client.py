@@ -1,7 +1,7 @@
 import socket
 
-target_host = "https://google.com"
-target_port = 80
+target_host = "0.0.0.0"
+target_port = 9993
 
 #creating the client socker
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -14,9 +14,10 @@ client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect((target_host, target_port))
 
 #sending data
-client.send("GET / HTTP/1.1\r\nHost: google.com\r\n\r\n")
+client.send(b"GET / HTTP/1.1\r\nHost: google.com\r\n\r\n")
 
 #receiving data
 response = client.recv(4096)
 print(response)
-
+client.close()
+print("closing connection")

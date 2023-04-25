@@ -4,7 +4,7 @@ import socket
 import threading
 
 bind_ip = "0.0.0.0"
-bind_port = 9999
+bind_port = 9993
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -20,15 +20,18 @@ def handle_client(client_socket):
     print("[*] Received: %s" % req)
     
     #send an acknowledgement packet
-    client_socket.send("ACK!")
+    client_socket.send(b"ACK!")
     client_socket.close()
 
-while True:
-    client, addr = server.accept() #the client variable contains the client socket that connected to this server
-    print(f"[*] Accepted connection from {addr[0]}:{addr[1]}")
+try:
+    while True:
+        client, addr = server.accept() #the client variable contains the client socket that connected to this server
+        print(f"[*] Accepted connection from {addr[0]}:{addr[1]}")
 
-    #start our client handle thread to handle incoming data
-    client_handler = threading.Thread(target=handle_client, args=(client,))
-    client_handler.start()
-    #everytime a client connects a new thread is made that handles the connected client socket
-    
+        #start our client handle thread to handle incoming data
+        client_handler = threading.Thread(target=handle_client, args=(client,))
+        client_handler.start()
+        #everytime a client connects a new thread is made that handles the connected client socket
+except:
+    server.close()
+    print("closing connection")
